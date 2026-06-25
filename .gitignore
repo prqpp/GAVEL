@@ -1,0 +1,67 @@
+# Python caches
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environments
+.env
+.venv/
+venv/
+env/
+conda/
+
+# Logs and temporary files
+*.log
+tmp/
+temp/
+
+# Local datasets and image corpora
+data/*.csv
+data/*.json
+data/*.jsonl
+data/images/
+data/raw/
+data/datasets/
+*.jpg
+*.jpeg
+*.JPG
+*.JPEG
+*.png
+*.bmp
+*.webp
+
+# Runtime outputs. Keep the small published summary CSVs in outputs/.
+outputs/eval/
+outputs/corr/
+outputs/reports/
+outputs/baselines/
+outputs/*.json
+
+# Large model caches and external checkpoints
+.cache/
+hf_cache/
+models/
+models--*/
+Qwen2.5-VL-*/
+InternVL*/
+*.safetensors
+*.bin
+*.onnx
+*.ckpt
+*.pth
+
+# Fusion-head checkpoints are local/private by default.
+checkpoints/*.pt
+!checkpoints/.gitkeep
+!checkpoints/README.md
+
+# Archives
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.rar
+*.7z

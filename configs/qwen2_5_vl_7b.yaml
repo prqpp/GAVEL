@@ -1,0 +1,24 @@
+# Default configuration: Qwen2.5-VL-7B + CLIP ViT-B/32 + MLP fusion head.
+# This reproduces the main results in Table 2 of the paper.
+
+clip:
+  name: ViT-B/32
+
+vlm:
+  kind: qwen2_5_vl
+  model_path: Qwen/Qwen2.5-VL-7B-Instruct
+  max_new_tokens: 18
+  image_size: 448
+
+fusion:
+  head: mlp
+  hidden: 16
+  ckpt: ./checkpoints/refclip_fusion.pt
+
+gating:
+  agree_thr: 0.55
+  agree_tol: 0.10
+  delta_cap: 0.40
+  min_vlm_w: 0.10
+  vlm_no_fusion_floor: 0.40
+  decay_kind: super2          # super-quadratic decay (k=2.5); see qL7P-Q5

@@ -1,0 +1,25 @@
+# Cross-VLM ablation backbone (rebuttal commitment to GxwP-Q1 / BSmU-Q3).
+# NOTE: requires implementing InternVL2Scorer in gavel/vlm_backend.py before
+# running.  Left here to document the intended interface.
+
+clip:
+  name: ViT-B/32
+
+vlm:
+  kind: internvl2
+  model_path: OpenGVLab/InternVL2-8B
+  max_new_tokens: 18
+  image_size: 448
+
+fusion:
+  head: mlp
+  hidden: 16
+  ckpt: ./checkpoints/refclip_fusion.pt   # zero-shot transfer of the head
+
+gating:
+  agree_thr: 0.55
+  agree_tol: 0.10
+  delta_cap: 0.40
+  min_vlm_w: 0.10
+  vlm_no_fusion_floor: 0.40
+  decay_kind: super2
