@@ -1,6 +1,5 @@
 # GAVEL — Gated Assessment via VLM-guided Evaluator for Look-alike pairs
 
-> Anonymous reference implementation accompanying the ICML 2026 submission
 > *"GAVEL: A Post-hoc, Plug-and-Play Framework for Mitigating LASD
 > Hallucinations in CLIP-style Similarity Assessment"*.
 
@@ -12,11 +11,6 @@ semantic signals agree (a "safe zone" delimited by GAB), the framework
 applies a smooth blend; when they disagree, it triggers a lightweight
 learnable fusion head that has been trained on a small human-preference
 dataset.
-
-The codebase is intentionally small: the entire framework consists of
-< 700 lines of Python, the fusion head has < 100 trainable parameters, and
-both CLIP and the VLM are kept frozen.
-
 ---
 
 ## 1. Repository layout
@@ -127,26 +121,8 @@ bash scripts/reproduce_main_table.sh
 
 ---
 
-## 5. Mapping the code onto the rebuttal commitments
 
-The rebuttal mentions several behavioural commitments.  This release
-materialises every one of them:
-
-| Reviewer / point | Commitment | Where it lives |
-|---|---|---|
-| **qL7P-Q4 / GxwP-Q2** — *Vision-prior Fallback* | "In the rare event of a VLM parsing failure, GAVEL will safely degrade to the native CLIP baseline score." | `scripts/eval.py`: when `vlm_scorer.score(...)` returns `None`, `s_out := s_clip` and the mode is logged as `PARSE_FAIL_FALLBACK_CLIP`. |
-| **qL7P-Q4 / GxwP-W4** — *Training-phase Sanitisation Flag* | "Image pairs marked with 0.0 are immediately intercepted and discarded from the training batch." | `scripts/train_fusion.py`: `--sanitize_zero_vlm` (ON by default) drops rows where `s_vlm = 0.0` *before* the head sees them.  The number of dropped rows is printed for transparency. |
-| **qL7P-Q4 / GxwP-Q2** — *Parse-failure rate tracking* | "Across tens of thousands of evaluations the actual parsing failure rate of Qwen2.5-VL was strictly 0%." | `scripts/eval.py` aggregates and prints `parse_fail_rate` per run, and writes it into `--report_json` so the final manuscript can quote a verifiable number. |
-| **qL7P-Q5** — *Super-quadratic decay ablation* | "We will provide an ablation of the penalty function design." | `gavel/gating.py::attenuate(kind=…)` exposes `linear / quad / super2 / exp`, switchable via `--decay_kind`. |
-| **GxwP-W1** — *Fusion-head simplicity* | "MLP is needed for an extremely asymmetric, smooth penalty surface." | `gavel/fusion.py` ships three drop-in heads (`mlp`, `linear`, `heuristic`) sharing the same 4-D feature. |
-| **GxwP-W3** — *N-expert generalisation* | "GAVEL generalises to N experts via a logical conjunction of thresholds." | The decoupling between `vlm_backend.py` and `fusion.py` keeps the semantic scorer pluggable. |
-| **GxwP-Q1 / qL7P-Q2 / BSmU-Q3** — *Backbone-agnostic / plug-and-play* | InternVL2 / LLaVA cross-VLM evaluation. | `gavel/vlm_backend.py::VLMScorer` is an ABC; `configs/internvl2.yaml` documents the interface for an additional backbone. |
-| **tUiR-W2** — *Statistical significance in the main table* | "We will integrate confidence intervals and standard deviations into the core tables." | `scripts/significance.py` aggregates the six existing `corr_summary_*.csv` files and emits a `mean ± std (Wilcoxon p)` table. |
-| **tUiR-W3** — *Code release* | "We commit to fully open-sourcing the complete GAVEL codebase upon acceptance." | This repository is the artefact; reproduction is one shell script. |
-
----
-
-## 6. Hyper-parameters at a glance
+## 5. Hyper-parameters at a glance
 
 | Symbol | Default | Description |
 |---|---|---|
@@ -161,8 +137,8 @@ The asymmetry of (τ₁, τ₂) is intentional — see Sec. 3.3 of the paper for
 why CLIP and VLM scores need different operating points.
 
 ---
-
-## 7. Citation
+<!--
+## 6. Citation
 
 ```bibtex
 @inproceedings{gavel2026,
@@ -173,8 +149,8 @@ why CLIP and VLM scores need different operating points.
   year   = {2026}
 }
 ```
-
-## 8. License
+-->
+## 6. License
 
 Released for academic research use. Replace this note with the final project
 license before public archival release if your venue or institution requires a
